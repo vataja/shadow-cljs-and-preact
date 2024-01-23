@@ -1,8 +1,23 @@
-(ns starter.browser)
+(ns starter.browser
+  (:require [reagent.core :as r]
+            [reagent.dom :as rdom]))
+
+(defn component-main []
+  (let [state (r/atom {})]
+    (fn []
+      [:div
+       [:input
+        {:type "text"
+         :on-change (fn [e]
+                      (reset! state (-> e .-target .-value)))}]
+       [:div "Reversed: "
+        (reverse @state)]])))
 
 ;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
-  (js/console.log "start"))
+  (js/console.log "start")
+  (rdom/render [component-main]
+               (js/document.getElementById "app")))
 
 (defn init []
   ;; init is called ONCE when the page loads
